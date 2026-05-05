@@ -9,7 +9,7 @@ public class Neo4jExample implements AutoCloseable {
 
     private final Driver driver;
 
-    public Neo4jExample(String uri, String user, String password, Driver driver) {
+    public Neo4jExample(String uri, String user, String password) {
         this.driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
     }
 
@@ -30,6 +30,16 @@ public class Neo4jExample implements AutoCloseable {
                         """);
                 return null;
             });
+        }
+    }
+
+    public static void main(String[] args) {
+        try(Neo4jExample app = new Neo4jExample(
+                "bolt://localhost:7687",
+                "neo4j",
+                "senha123"
+        )){
+            app.criarRelacoes();
         }
     }
 }
