@@ -3,6 +3,7 @@ package org.example;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Session;
 
 public class Neo4jExample implements AutoCloseable {
 
@@ -13,7 +14,22 @@ public class Neo4jExample implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        // implementar
+    public void close() {
+        driver.close();
+    }
+
+    public void criarRelacoes() {
+        try (Session session = driver.session()) {
+            session.writeTransaction(tx -> {
+                tx.run("""
+                        CREATE (a:Pessoa {nome: 'André'})
+                        CREATE (b:Pessoa {nome: 'Joao'})
+                        CREATE (c:Pessoa {nome: 'Maria'})
+                        CREATE (a)-[:AMIGO]->(b)
+                        CREATE (a)-[:AMIGO]->(c)
+                        """);
+                return null;
+            });
+        }
     }
 }
